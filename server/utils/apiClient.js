@@ -1,5 +1,5 @@
 import axios from 'axios';
-const config = require('../../config/config');
+import config from '../../config/config';
 
 export default function apiClient(req) {
 
