@@ -3,7 +3,9 @@
 
 ## Overview:
 
-App is a continuation of repo 'bootstrap-react-redux-webpack-ssr-one'.
+App is a continuation of repo 'bootstrap-react-redux-webpack-ssr-two'. Babel 7.x has been re-worked for app.
+
+So, I spent the last few days going over monorepo's, Lerna, Babel, ES5 && ES6. Why?, I noticed the 'website' app in the ['react-router'](https://github.com/ReactTraining/react-router/tree/master/website) repository does not fully work so I decided to re-create the 'website' app. That attempt quickly drew me into the world of Lerna && 'Monorepos'. After a day or so of working on it I realized I had bitten off more than I wanted to handle and moved on. Well, it turns out it was time well spent because the angle I took was to re-create the 'website' app using Babel 7.x && Webpack 4.x. Long story short I realized Babel's 7.x concept of a ['root' directory](https://babeljs.io/docs/en/config-files#project-wide-configuration). I can always use more experience with Babel && ES5/6 so I started a basic SSR app utilizing Babel 7.x and it's concept of 'root' (will upload it shortly). That then made me realize the current app I have been working on needed a review of it's Babel/ECMAScript usage. So, I reviewed the very informative [react-redux-universal-hot-example](https://github.com/bertho-zero/react-redux-universal-hot-example/tree/deps) and re-realized I need more knowledge of 'Dll's, Babel packages (knowledge of the ECMAScript Proposals) && ES5/6.
 
 
 ### To-Do:
