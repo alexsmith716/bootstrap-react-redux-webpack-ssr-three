@@ -18,7 +18,7 @@ import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/
 
 // import { Notifs, InfoBar } from '../../components';
 import { Notifs, InfoBar } from '../../components';
-const config = require('../../../config/config');
+import config from '../../../config/config';
 
 // --------------------------------------------------------------------------
 // HOC: apply HOCs outside the component definition so that the resulting component is created only once. 

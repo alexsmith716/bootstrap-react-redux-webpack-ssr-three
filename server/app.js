@@ -4,7 +4,7 @@ import socketio from '@feathersjs/socketio-client';
 import authentication from '@feathersjs/authentication-client';
 import io from 'socket.io-client';
 import axios from 'axios';
-const config = require('../config/config');
+import config from '../config/config';
 
 
 // localForage is a asynchronous storage library for JavaScript
