@@ -25,6 +25,29 @@ https://babeljs.io/docs/en/config-files
 https://babeljs.io/docs/en/v7-migration
 https://babeljs.io/docs/en/v7-migration-api
 
+
+#### Transpiling:
+
+* A transpiler takes the syntax that older browsers won't understand (e.g. 'classes', 'const', 'arrow functions'), and turns them into syntax they will understand (functions, 'var', functions).
+* If it's new syntax, you can probably transpile it
+* (webpack > babel-loader > (@babel/core && @babel/preset-env))
+
+#### Polyfills:
+
+* A polyfill is code that defines a new object or method in browsers that don't support that object or method. 
+* You can have polyfills for many different features.
+* Maybe one for 'Array.prototype.includes', and two more for 'Map' and 'Promise'.
+* If it's a new object or method, you can probably polyfill it
+* (@babel/polyfill)
+* https://babeljs.io/docs/en/babel-polyfill/
+* https://github.com/babel/babel/tree/master/packages#other
+
+* 'core-js': what babel-polyfill uses to polyfill
+* @babel/runtime-corejs2: babel's modular runtime helpers with core-js@2 polyfilling
+* https://github.com/zloirock/core-js
+* https://github.com/zloirock/core-js/tree/v2
+
+
 ### SCSS:
 
 * Basic Guide:
