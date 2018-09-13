@@ -37,10 +37,9 @@ You have requested to use webpack DLLs (env var WEBPACK_DLLS=1) but a
 manifest could not be found. This likely means you have forgotten to
 build the DLLs.
 You can do that by running:
-    yarn build-dlls
+    yarn dlls
 The request to use DLLs for this build will be ignored.`);
   }
-
   return undefined;
 }
 

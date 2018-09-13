@@ -1,6 +1,6 @@
 // require("@babel/polyfill");
 const webpack = require('webpack');
-const helpers = require('./vendor.dll.helpers');
+const dllHelpers = require('./dllreferenceplugin');
 const path = require('path');
 
 const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugin;
@@ -25,8 +25,8 @@ console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer:
 
 // base_configuration.output.publicPath = dev_config.devServerPath;
 
-// var validDLLs = helpers.isValidDLLs('vendor', configuration.output.path);
-var validDLLs = helpers.isValidDLLs('vendor','/');
+// var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
+var validDLLs = dllHelpers.isValidDLLs('vendor','/');
 
 if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
   process.env.WEBPACK_DLLS = '0';
@@ -187,5 +187,5 @@ console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG >>>>>>>>>>>>>>>: ', configurati
 // console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG RULES >>>>>>>>>: ', configuration.module.rules);
 
 if (process.env.WEBPACK_DLLS === '1' && validDLLs) {
-  helpers.installVendorDLL(configuration, 'vendor');
+  dllHelpers.installVendorDLL(configuration, 'vendor');
 };
