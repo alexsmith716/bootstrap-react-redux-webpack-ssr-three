@@ -1,4 +1,4 @@
-# bootstrap-react-redux-webpack-ssr-two
+# bootstrap-react-redux-webpack-ssr-three
 
 
 ## Overview:
