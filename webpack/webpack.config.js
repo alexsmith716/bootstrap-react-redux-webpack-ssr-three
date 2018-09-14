@@ -14,7 +14,6 @@ module.exports = {
 
   output: {
     path: path.resolve(rootPath, 'build/public/assets'),
-    publicPath: '/assets/',
   },
 
   module: {

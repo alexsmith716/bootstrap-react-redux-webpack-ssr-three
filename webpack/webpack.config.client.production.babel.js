@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const config = require('../config/config');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -54,12 +55,9 @@ configuration.entry.main.push(
   './client/index.js',
 );
 
-// configuration.entry.vendor.push(
-//   '',
-// );
-
 configuration.output.filename = '[name].[chunkhash].bundle.js';
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+configuration.output.publicPath = config.assetsPath;
 
 configuration.module.rules.push(
   {
