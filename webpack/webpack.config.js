@@ -9,11 +9,10 @@ module.exports = {
 
   entry: {
     main: [],
-    // vendor: [],
   },
 
   output: {
-    path: path.resolve(rootPath, 'build/public/assets'),
+    path: path.resolve(rootPath, './build/public/assets'),
   },
 
   module: {
