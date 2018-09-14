@@ -11,7 +11,7 @@ import path from 'path';
 import http from 'http';
 import favicon from 'serve-favicon';
 import headers from './utils/headers';
-import delay from 'express-delay';
+// import delay from 'express-delay';
 import mongoose from 'mongoose';
 import httpProxy from 'http-proxy';
 import Cookies from 'cookies';

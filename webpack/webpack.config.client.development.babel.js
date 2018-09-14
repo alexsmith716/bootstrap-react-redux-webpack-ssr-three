@@ -5,11 +5,11 @@ const path = require('path');
 
 const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugin;
 const base_configuration = require('./webpack.config');
-const dev_config = require('../config/config');
+const config = require('../config/config');
 
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const host = config.HOST || 'localhost';
+// const port = config.PORT + 1 || 3001;
 
-const assetsPath = path.resolve(base_configuration.context, './build/public/assets');
 const serverPath = path.resolve(base_configuration.context, './build/server');
 const webpackDllsPath = path.resolve(base_configuration.context, './dlls/');
 
@@ -23,7 +23,7 @@ const { addDevServerConfiguration, setDevFileServer } = require('./devserver');
 console.warn('>>>>>> webpack.config.client.development.babel > addDevServerConfiguration: ', addDevServerConfiguration);
 console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer: ', setDevFileServer);
 
-// base_configuration.output.publicPath = dev_config.devServerPath;
+// base_configuration.output.publicPath = config.devServerPath;
 
 // var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
 var validDLLs = dllHelpers.isValidDLLs('vendor','/');
@@ -52,6 +52,7 @@ configuration.devtool = 'inline-source-map';
 
 configuration.output.filename = '[name].[hash].js';
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+configuration.output.publicPath = config.assetsPath;
 
 // https://babeljs.io/docs/en/next/babel-polyfill.html
 // If you are using ES6's import syntax in your application's entry point, 
@@ -61,10 +62,6 @@ configuration.entry.main.push(
   'bootstrap-loader',
   './client/index.js',
 );
-
-// configuration.entry.vendor.push(
-//   '',
-// );
 
 configuration.module.rules.push(
   // {
@@ -160,8 +157,6 @@ configuration = setDevFileServer(configuration)
 // ==============================================================================================
 
 configuration.plugins.push(
-
-  // new CleanWebpackPlugin([assetsPath,serverPath,webpackDllsPath], { root: configuration.context }),
 
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': '"development"',
