@@ -57,7 +57,7 @@ configuration.entry.main.push(
 
 configuration.output.filename = '[name].[chunkhash].bundle.js';
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
-configuration.output.publicPath = config.assetsPath;
+configuration.output.publicPath = config.publicPath;
 
 configuration.module.rules.push(
   {

@@ -23,19 +23,22 @@ const { addDevServerConfiguration, setDevFileServer } = require('./devserver');
 console.warn('>>>>>> webpack.config.client.development.babel > addDevServerConfiguration: ', addDevServerConfiguration);
 console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer: ', setDevFileServer);
 
+// ==============================================================================================
+
+let configuration = clientConfiguration(base_configuration, settings);
+
+// ==============================================================================================
+
 // base_configuration.output.publicPath = config.devServerPath;
 
 // var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
-var validDLLs = dllHelpers.isValidDLLs('vendor','/');
+// var validDLLs = dllHelpers.isValidDLLs('vendor','/');
+var validDLLs = dllHelpers.isValidDLLs('vendor',configuration.output.path);
 
 if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
   process.env.WEBPACK_DLLS = '0';
   console.warn('>>>>>> webpack.config.client.development.babel > WEBPACK_DLLS disabled !! <<<<<<<<<<');
 };
-
-// ==============================================================================================
-
-let configuration = clientConfiguration(base_configuration, settings);
 
 // ==============================================================================================
 
@@ -52,7 +55,7 @@ configuration.devtool = 'inline-source-map';
 
 configuration.output.filename = '[name].[hash].js';
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
-configuration.output.publicPath = config.assetsPath;
+configuration.output.publicPath = config.publicPath;
 
 // https://babeljs.io/docs/en/next/babel-polyfill.html
 // If you are using ES6's import syntax in your application's entry point, 
