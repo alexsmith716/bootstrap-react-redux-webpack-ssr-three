@@ -1,7 +1,5 @@
 const config = require('../config/config');
 
-console.log('>>>>>>>>>>>>>> DEVSERVER !!!!!!!!! >>>>>>>>>>>>>>> config: ', config);
-
 // core tenet of 'Redux' is to never mutate object state
 // --------------
 // compiled configuration objects built with modified/new values from initial 'config' object
