@@ -7,9 +7,6 @@ const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugi
 const base_configuration = require('./webpack.config');
 const config = require('../config/config');
 
-// const host = config.HOST || 'localhost';
-// const port = config.PORT + 1 || 3001;
-
 const serverPath = path.resolve(base_configuration.context, './build/server');
 const webpackDllsPath = path.resolve(base_configuration.context, './dlls/');
 
