@@ -1,4 +1,5 @@
-// require("@babel/polyfill");
+require("@babel/polyfill");
+
 const webpack = require('webpack');
 const dllHelpers = require('./dllreferenceplugin');
 const path = require('path');
@@ -7,7 +8,6 @@ const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugi
 const base_configuration = require('./webpack.config');
 const config = require('../config/config');
 
-const serverPath = path.resolve(base_configuration.context, './build/server');
 const webpackDllsPath = path.resolve(base_configuration.context, './dlls/');
 
 const settings = require('./universal-webpack-settings');
@@ -15,22 +15,15 @@ const { clientConfiguration } = require('universal-webpack');
 
 // ==============================================================================================
 
-const { addDevServerConfiguration, setDevFileServer } = require('./devserver');
+const { setDevFileServer } = require('./devserver');
 
-console.warn('>>>>>> webpack.config.client.development.babel > addDevServerConfiguration: ', addDevServerConfiguration);
 console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer: ', setDevFileServer);
 
 // ==============================================================================================
 
-let configuration = clientConfiguration(base_configuration, settings);
-
-// ==============================================================================================
-
-// base_configuration.output.publicPath = config.devServerPath;
-
 // var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
 // var validDLLs = dllHelpers.isValidDLLs('vendor','/');
-var validDLLs = dllHelpers.isValidDLLs('vendor',configuration.output.path);
+var validDLLs = dllHelpers.isValidDLLs('vendor','/');
 
 if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
   process.env.WEBPACK_DLLS = '0';
@@ -39,7 +32,7 @@ if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
 
 // ==============================================================================================
 
-configuration = addDevServerConfiguration(configuration);
+let configuration = clientConfiguration(base_configuration, settings);
 
 // ==============================================================================================
 
@@ -59,8 +52,10 @@ configuration.output.publicPath = config.publicPath;
 // you should instead import the polyfill at the top of the entry point 
 // to ensure the polyfills are loaded first
 configuration.entry.main.push(
+  'webpack-hot-middleware/client?path=http://localhost:3001/__webpack_hmr',
+  // 'webpack-hot-middleware/client',
   'bootstrap-loader',
-  './client/index.js',
+  './client/index.js'
 );
 
 configuration.module.rules.push(
@@ -113,7 +108,7 @@ configuration.module.rules.push(
           resources: [
             path.resolve(configuration.context, 'client/assets/scss/app/functions.scss'),
             path.resolve(configuration.context, 'client/assets/scss/app/variables.scss'),
-            path.resolve(configuration.context, 'client/assets/scss/app/mixins.scss'),
+            path.resolve(configuration.context, 'client/assets/scss/app/mixins.scss')
           ],
         },
       },
@@ -158,6 +153,8 @@ configuration = setDevFileServer(configuration)
 
 configuration.plugins.push(
 
+  new webpack.HotModuleReplacementPlugin(),
+
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': '"development"',
     __CLIENT__: true,
@@ -179,7 +176,9 @@ configuration.plugins.push(
 module.exports = configuration;
 
 console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG >>>>>>>>>>>>>>>: ', configuration);
-// console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG RULES >>>>>>>>>: ', configuration.module.rules);
+
+console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG MAIN!! >>>>>>>>>: ', configuration.entry.main);
+console.log('>>>>>>>>>>>>>> WEBPACK DEV > CONFIG RULES >>>>>>>>>: ', configuration.module.rules);
 
 if (process.env.WEBPACK_DLLS === '1' && validDLLs) {
   dllHelpers.installVendorDLL(configuration, 'vendor');

@@ -1,5 +1,6 @@
 {
   "bootstrapVersion": 4,
+  "useCustomIconFontPath": false,
   "preBootstrapCustomizations": "./client/assets/scss/bootstrap/preBootstrapCustomizations.scss",
   "bootstrapCustomizations": "./client/assets/scss/bootstrap/bootstrapCustomizations.scss",
   "appStyles": "./client/assets/scss/app/theme.scss",
@@ -7,16 +8,18 @@
   "env": {
     "development": {
       "styleLoaders": [
-        "style-loader",
-        "css-loader",
-        "sass-loader",
+        "style-loader?sourceMap",
+        "css-loader?sourceMap&importLoaders=2",
+        "resolve-url-loader",
+        "sass-loader?sourceMap"
       ],
       "extractStyles": false
     },
     "production": {
       "styleLoaders": [
-        "css-loader",
-        "sass-loader",
+        "style-loader",
+        "css-loader?importLoaders=2",
+        "sass-loader?sourceMap"
       ],
       "extractStyles": true,
     }

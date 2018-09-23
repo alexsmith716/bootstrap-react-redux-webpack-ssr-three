@@ -1,3 +1,8 @@
+// webpack.config.server.development.babel.js
+// const configServer = require('./webpack.config.server.production.babel');
+// const { setDevFileServer } = require('./devserver');
+// module.exports = setDevFileServer(configServer);
+
 const { serverConfiguration } = require('universal-webpack');
 const settings = require('./universal-webpack-settings');
 const configuration = require('./webpack.config');
