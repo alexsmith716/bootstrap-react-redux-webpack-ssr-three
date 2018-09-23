@@ -17,12 +17,5 @@
     ["@babel/plugin-proposal-class-properties", { "loose": false, "useBuiltIns": false }],
     "@babel/plugin-proposal-export-default-from",
     "@babel/plugin-proposal-object-rest-spread"
-  ],
-  "env": {
-    "development": {
-      "plugins": [
-        "@babel/plugin-transform-react-jsx-source"
-      ]
-    }
-  }
+  ]
 }
