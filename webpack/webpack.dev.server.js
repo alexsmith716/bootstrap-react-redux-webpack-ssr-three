@@ -27,10 +27,11 @@ var app = new express();
 app.use(require('webpack-dev-middleware')(compiler, serverOptions));
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.listen(port, function onAppListening(err) {
+// app.listen(port, function onAppListening(err) {
+app.listen(port, function (err) {
   if (err) {
-    console.error(err);
+    console.error('>>>>>> webpack.dev.server > Express DEV server connection Error', err);
   } else {
-    console.info('==> Webpack development server listening on port !!! %s', port);
+    console.error('>>>>>> webpack.dev.server > Express DEV server listening on port', port);
   }
 });

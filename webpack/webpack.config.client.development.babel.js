@@ -17,22 +17,20 @@ const { clientConfiguration } = require('universal-webpack');
 
 const { setDevFileServer } = require('./devserver');
 
-console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer: ', setDevFileServer);
+// console.warn('>>>>>> webpack.config.client.development.babel > setDevFileServer: ', setDevFileServer);
 
 // ==============================================================================================
 
-// var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
-// var validDLLs = dllHelpers.isValidDLLs('vendor','/');
-var validDLLs = dllHelpers.isValidDLLs('vendor','/');
+let configuration = clientConfiguration(base_configuration, settings);
+
+// ==============================================================================================
+
+var validDLLs = dllHelpers.isValidDLLs('vendor', configuration.output.path);
 
 if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
   process.env.WEBPACK_DLLS = '0';
   console.warn('>>>>>> webpack.config.client.development.babel > WEBPACK_DLLS disabled !! <<<<<<<<<<');
 };
-
-// ==============================================================================================
-
-let configuration = clientConfiguration(base_configuration, settings);
 
 // ==============================================================================================
 

@@ -146,17 +146,12 @@ app.use(express.errorHandler({
 }));
 
 if (serverConfig.apiPort) {
-
-  app.listen(serverConfig.apiPort, err => {
-
+  app.listen(serverConfig.apiPort, (err) => {
     if (err) {
-      console.error('>>>>>> API > API > Express server connection Error', err);
+      console.error('>>>>>> api > api > Express API server connection Error', err);
     }
-
-    console.error('>>>>>> API > API > Express server running on PORT: ', serverConfig.apiPort);
-
+    console.error('>>>>>> api > api > Express API server running on PORT: ', serverConfig.apiPort);
   });
-
 } else {
   console.error('==>     ERROR: No APIPORT environment variable has been specified');
 }
