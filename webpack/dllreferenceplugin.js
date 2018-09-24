@@ -10,16 +10,15 @@ module.exports = {
 
 function installVendorDLL(config, dllName) {
   var manifest = loadDLLManifest(path.join(projectRootPath, `webpack/dlls/${dllName}.json`));
-  // console.log('>>>>>>>>>>>> HELPERS > installVendorDLL > manifest: ', manifest);
-
+  // console.log('>>>>>>>>>>>> dllreferenceplugin > installVendorDLL > manifest: ', manifest);
   if (manifest) {
-    console.log(`>>>>>>>>>>>> HELPERS > installVendorDLL > Webpack: will be using the ${dllName} DLL <<<<<<<`);
+    console.log(`>>>>>>>>>>>> dllreferenceplugin > installVendorDLL > Webpack: will be using the ${dllName} DLL <<<<<<<`);
     config.plugins.push(new webpack.DllReferencePlugin({
       context: projectRootPath,
       manifest: manifest
     }));
   } else {
-    console.log('>>>>>>>>>>>> HELPERS > installVendorDLL > NO manifest <<<<<<<');
+    console.log('>>>>>>>>>>>> dllreferenceplugin > installVendorDLL > NO manifest <<<<<<<');
   }
 };
 
@@ -54,7 +53,7 @@ function isValidDLLs(dllNames, assetsPath) {
       var dll = fs.readFileSync(path.join(assetsPath, `dlls/dll__${dllName}.js`)).toString('utf-8');
 
       if (dll.indexOf(manifest.name) === -1) {
-        console.warn(`>>>>>>>>>>>> HELPERS > isValidDLLs > Invalid dll: ${dllName}`);
+        console.warn(`>>>>>>>>>>>> dllreferenceplugin > isValidDLLs > Invalid dll: ${dllName}`);
         return false;
       }
 
