@@ -24,6 +24,9 @@ var serverOptions = {
 
 var app = new express();
 
+// https://github.com/webpack/webpack-dev-middleware#server-side-rendering
+// https://github.com/webpack/docs/wiki/node.js-api#stats
+
 app.use(require('webpack-dev-middleware')(compiler, serverOptions));
 app.use(require('webpack-hot-middleware')(compiler));
 
