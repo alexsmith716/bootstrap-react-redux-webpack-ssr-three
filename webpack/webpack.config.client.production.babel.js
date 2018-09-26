@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const config = require('../config/config');
 
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
@@ -14,7 +14,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { clientConfiguration } = require('universal-webpack');
 const settings = require('./universal-webpack-settings');
 const configuration = require('./webpack.config');
-const rootPath = path.resolve(__dirname, '..');
 
 const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugin;
 
@@ -139,33 +138,16 @@ configuration.module.rules.push(
 // Setting optimization.minimizer overrides the defaults provided by webpack,
 // so make sure to also specify a JS minimizer:
 
+// https://webpack.js.org/plugins/split-chunks-plugin/
+
+// moved from, 'uglifyjs-webpack-plugin' to 'terser-webpack-plugin'
+// https://github.com/webpack-contrib/terser-webpack-plugin
+// https://github.com/webpack-contrib/uglifyjs-webpack-plugin/blob/master/CHANGELOG.md#200-2018-09-14
+
 configuration.optimization = {
   minimizer: [
-    new UglifyJsPlugin({
-      // cache: false,      // Enable file caching (default: false)
-      // parallel: false,   // Use multi-process parallel running to improve the build speed (default: false)
-      // sourceMap: false, // Use source maps to map error message locations to modules (default: false)
-      // extractComments: false, // Whether comments shall be extracted to a separate file (default: false)
-      // uglifyOptions: {
-      //   ecma: 8, // Supported ECMAScript Version (default undefined)
-      //   warnings: false, // Display Warnings (default false)
-      //   mangle: true, // Enable Name Mangling (default true)
-      //   compress: {
-      //     passes: 1,  // The maximum number of times to run compress (default: 1)
-      //   },
-      //   output: {
-      //     beautify: true, // whether to actually beautify the output (default true)
-      //     comments: false, // true or "all" to preserve all comments, "some" to preserve some (default false)
-      //   },
-      //   ie8: false, // Enable IE8 Support (default false)
-      //   safari10: false, // Enable work around Safari 10/11 bugs in loop scoping and await (default false)
-      // }
-    }),
-    new OptimizeCSSAssetsPlugin({
-      // cssProcessor: require('cssnano'), // cssnano >>> default optimize \ minimize css processor 
-      // cssProcessorOptions: { discardComments: { removeAll: true } }, // defaults to {}
-      // canPrint: true, // indicating if the plugin can print messages to the console (default true)
-    }),
+    new TerserPlugin(),
+    new OptimizeCSSAssetsPlugin()
   ],
   splitChunks: {
     chunks: 'async',
@@ -190,22 +172,21 @@ configuration.optimization = {
         chunks: chunk => ['main',].includes(chunk.name),
         test: module => /[\\/]node_modules[\\/]/.test(module.context),
         minChunks: 1,
-        minSize: 0,
-      },
-      // commons: {
-      //   name: 'commons',
-      // }
+        minSize: 0
+        // chunks: 'all'
+      }
     },
+    // DEFAULT SETTINGS BELOW:
     // splitChunks: {
     //   chunks: 'async',
     //   minSize: 30000,
     //   minChunks: 1,
     //   maxAsyncRequests: 5,
     //   maxInitialRequests: 3,
-    //   automaticNameDelimiter: '.',
+    //   automaticNameDelimiter: '-',
     //   name: true,
     //   cacheGroups: {
-    //     vendor: {
+    //     vendors: {
     //       test: /[\\/]node_modules[\\/]/,
     //       priority: -10
     //     },
@@ -218,10 +199,10 @@ configuration.optimization = {
     // }
   },
   runtimeChunk: {
-    name: 'manifest',
+    name: 'manifest'
   },
-  // runtimeChunk: true
-  // occurrenceOrder: true,
+  // runtimeChunk: true,
+  // occurrenceOrder: true
 };
 
 // ==============================================================================================
@@ -251,7 +232,7 @@ configuration.plugins.push(
 
   new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: path.join(rootPath, './server/pwa.js'),
+    template: path.join(configuration.context, './server/pwa.js'),
   }),
 
   // use service workers to cache external dependencies
@@ -279,15 +260,15 @@ configuration.plugins.push(
   //   filename: '../../analyzers/visualizer/bundle-stats.html'
   // }),
 
-  new BundleAnalyzerPlugin({
-    analyzerMode: 'static',
-    reportFilename: '../../analyzers/bundleAnalyzer/client-development.html',
-    // analyzerMode: 'server',
-    // analyzerPort: 8888,
-    // defaultSizes: 'parsed',
-    openAnalyzer: false,
-    generateStatsFile: false
-  }),
+  // new BundleAnalyzerPlugin({
+  //   analyzerMode: 'static',
+  //   reportFilename: '../../analyzers/bundleAnalyzer/client-development.html',
+  //   // analyzerMode: 'server',
+  //   // analyzerPort: 8888,
+  //   // defaultSizes: 'parsed',
+  //   openAnalyzer: false,
+  //   generateStatsFile: false
+  // }),
 );
 
 // console.log('>>>>>>>>>>>>>>>>>>> WCCPB CLIENT configuration: ', configuration)

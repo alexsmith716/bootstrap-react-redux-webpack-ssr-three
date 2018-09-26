@@ -5,30 +5,6 @@ const path = require('path');
 
 const rootPath = path.resolve(__dirname, '..');
 
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-// const babelrc = fs.readFileSync('./.babelrc', 'utf8');
-// let babelrcObject = {};
-// 
-// try {
-//   babelrcObject = JSON.parse(babelrc);
-// } catch (err) {
-//   console.error('==>     ERROR: Error parsing your .babelrc.');
-//   console.error(err);
-// }
-// 
-// const babelrcObjectDevelopment = (babelrcObject.env && babelrcObject.env.development) || {};
-// // merge global and dev-only plugins
-// const combinedPlugins = (babelrcObject.plugins || []).concat(babelrcObjectDevelopment.plugins);
-// const babelLoaderQuery = Object.assign({}, babelrcObject, babelrcObjectDevelopment, { plugins: combinedPlugins });
-// delete babelLoaderQuery.env;
-// 
-// console.warn('>>>>>> webpack.config > babelLoaderQuery!!!!: ', babelLoaderQuery);
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-
 module.exports = {
 
   context: rootPath,
@@ -47,8 +23,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        exclude: /node_modules(\/|\\)(?!(@feathersjs))/,
-        // options: babelLoaderQuery
+        exclude: /node_modules(\/|\\)(?!(@feathersjs))/
       },
       {
         test: /\.(jpg|jpeg|gif|png)$/,

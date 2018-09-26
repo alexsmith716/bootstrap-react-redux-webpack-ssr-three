@@ -13,6 +13,8 @@ const webpackDllsPath = path.resolve(base_configuration.context, './dlls/');
 const settings = require('./universal-webpack-settings');
 const { clientConfiguration } = require('universal-webpack');
 
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 // ==============================================================================================
 
 const { setDevFileServer } = require('./devserver');
@@ -34,6 +36,8 @@ if (process.env.WEBPACK_DLLS === '1' && !validDLLs) {
 
 // ==============================================================================================
 
+// configuration.name = '',
+
 configuration.mode = 'development';
 
 // https://webpack.js.org/guides/development/#source-maps
@@ -51,7 +55,6 @@ configuration.output.publicPath = config.publicPath;
 // to ensure the polyfills are loaded first
 configuration.entry.main.push(
   'webpack-hot-middleware/client?path=http://localhost:3001/__webpack_hmr',
-  // 'webpack-hot-middleware/client',
   'bootstrap-loader',
   './client/index.js'
 );
@@ -167,6 +170,15 @@ configuration.plugins.push(
 
   new webpack.NamedModulesPlugin(),
 
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    reportFilename: '../../analyzers/bundleAnalyzer/client-development.html',
+    // analyzerMode: 'server',
+    // analyzerPort: 8888,
+    // defaultSizes: 'parsed',
+    openAnalyzer: false,
+    generateStatsFile: false
+  })
 );
 
 // ==============================================================================================
