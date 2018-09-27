@@ -48,7 +48,7 @@ configuration.stats = {
   // children: false,
 }
 
-// https://babeljs.io/docs/en/next/babel-polyfill.html
+// Code Splitting: Entry Points: Manually split code using entry configuration. 
 configuration.entry.main.push(
   'bootstrap-loader',
   './client/index.js',
@@ -149,6 +149,7 @@ configuration.optimization = {
     new TerserPlugin(),
     new OptimizeCSSAssetsPlugin()
   ],
+  // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
   splitChunks: {
     chunks: 'async',
     minSize: 30000,
@@ -157,6 +158,20 @@ configuration.optimization = {
     maxInitialRequests: 3,
     automaticNameDelimiter: '.',
     name: true,
+    // DEFAULT SETTINGS +++++++++++++++++:
+    // vendors added to main.js
+    // cacheGroups: {
+    //   vendors: {
+    //     test: /[\\/]node_modules[\\/]/,
+    //     priority: -10
+    //   },
+    //   default: {
+    //     minChunks: 2,
+    //     priority: -20,
+    //     reuseExistingChunk: true
+    //   }
+    // }
+    // VENDOR SPECIFIC CHUNK +++++++++++++++++:
     cacheGroups: {
       // styles: {
       //   name: 'main',
@@ -171,32 +186,13 @@ configuration.optimization = {
         reuseExistingChunk: true,
         chunks: chunk => ['main',].includes(chunk.name),
         test: module => /[\\/]node_modules[\\/]/.test(module.context),
+        // VENDOR.JS 10 CHUNKS / 823 KiB +++++++++++++++++:
         minChunks: 1,
         minSize: 0
+        // VENDOR.JS 0 CHUNKS / 835 KiB +++++++++++++++++:
         // chunks: 'all'
       }
     },
-    // DEFAULT SETTINGS BELOW:
-    // splitChunks: {
-    //   chunks: 'async',
-    //   minSize: 30000,
-    //   minChunks: 1,
-    //   maxAsyncRequests: 5,
-    //   maxInitialRequests: 3,
-    //   automaticNameDelimiter: '-',
-    //   name: true,
-    //   cacheGroups: {
-    //     vendors: {
-    //       test: /[\\/]node_modules[\\/]/,
-    //       priority: -10
-    //     },
-    //     default: {
-    //       minChunks: 2,
-    //       priority: -20,
-    //       reuseExistingChunk: true
-    //     }
-    //   }
-    // }
   },
   runtimeChunk: {
     name: 'manifest'
