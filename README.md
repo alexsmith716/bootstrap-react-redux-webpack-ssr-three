@@ -181,11 +181,13 @@ https://babeljs.io/docs/en/v7-migration-api
   * https://webpack.js.org/guides/code-splitting/#prevent-duplication
 
 * Dynamic Imports: Split code via inline function calls within modules. 
-  * ('react-loadable')
   * dynamic code splitting.
   * use the import() syntax that conforms to the ECMAScript proposal for dynamic imports.
   * Dynamically load modules. Calls to import() are treated as split points
   * Calls to import() are treated as split points - meaning the requested module and it's children are split out into a separate chunk
+  * import() returns a promise (used with async functions)
+  * import() returns a promise (requires using Babel and 'babel-plugin-syntax-dynamic-import' plugin)
+  * 'react-loadable': 'A higher order component for loading components with promises'
   * https://webpack.js.org/guides/code-splitting/#dynamic-imports
   * https://webpack.js.org/api/module-methods/#import-
   * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
