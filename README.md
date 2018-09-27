@@ -74,6 +74,8 @@ https://babeljs.io/docs/en/v7-migration-api
 
 ### Code-Splitting:
 
+* https://webpack.js.org/guides/code-splitting/#dynamic-imports
+
 * utilizing 'dynamic import' format
 * benefit: initial payload of app is smaller
 * split points get loaded on demand
@@ -158,3 +160,75 @@ https://babeljs.io/docs/en/v7-migration-api
 * https://mongoosejs.com/docs/promises.html
 
 * https://docs.mongodb.com/manual/reference/connection-string/
+
+
+### Code Splitting:
+
+* https://webpack.js.org/guides/code-splitting/
+
+* used to achieve smaller bundles and control resource load prioritization
+* has a major impact on load time
+
+* Three Main approaches to code splitting:
+
+* Entry Points: Manually split code using entry configuration.
+  * (webpack-config > configuration.entry.main.push('bootstrap-loader','./client/index.js');)
+  * https://webpack.js.org/guides/code-splitting/#entry-points
+
+* Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+  * (used in conjunction with 1st approach - Entry Points)
+  * ((webpack-config > optimization.splitChunks)
+  * https://webpack.js.org/guides/code-splitting/#prevent-duplication
+
+* Dynamic Imports: Split code via inline function calls within modules. 
+  * ('react-loadable')
+  * dynamic code splitting.
+  * use the import() syntax that conforms to the ECMAScript proposal for dynamic imports.
+  * Dynamically load modules. Calls to import() are treated as split points
+  * Calls to import() are treated as split points - meaning the requested module and it's children are split out into a separate chunk
+  * https://webpack.js.org/guides/code-splitting/#dynamic-imports
+  * https://webpack.js.org/api/module-methods/#import-
+  * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
+
+
+>>>>>>>>>>>>>>>> '/' SERVER > APP LOADER > (webpack-compiled chunks) > ASSETS:
+{
+    javascript: {
+        'vendors.login.register': '/assets/vendors.login.register.9ae80a2660afeeda9563.chunk.js',
+        main: '/assets/main.d09b8b2ca23b8d9e5cdf.chunk.js',
+        about: '/assets/about.a17460bd4aee9b0aad05.chunk.js',
+        'about-one': '/assets/about-one.31cb85ccb1de1e23f467.chunk.js',
+        'about-too': '/assets/about-too.d873b55a6318510f7161.chunk.js',
+        'about-three': '/assets/about-three.1bff2ae178ee02ff19b5.chunk.js',
+        'sticky-footer': '/assets/sticky-footer.17a3f45b5e9826334052.chunk.js',
+        login: '/assets/login.be00918d3ff766e60b5a.chunk.js',
+        register: '/assets/register.9030162e22f268a07e81.chunk.js',
+        'login-success': '/assets/login-success.24bfc2ce96a3e6ba9164.chunk.js',
+        vendor: '/assets/vendor.d643b944b679c83b61b8.chunk.js',
+        manifest: '/assets/manifest.92f919aa63ff58ddb529.bundle.js'
+    },
+    styles: {
+        main: '/assets/main.7a6399b3d9232fe667da.css.css',
+        about: '/assets/about.f9d89f08618e1d36e261.css.css',
+        'about-one': '/assets/about-one.c74f44ca378a8a87a2dd.css.css',
+        'about-three': '/assets/about-three.aa06e690451565206d36.css.css',
+        'sticky-footer': '/assets/sticky-footer.8b75b3e32a3fa1d7b819.css.css',
+        login: '/assets/login.c7d0560f26caceb37ccb.css.css',
+        register: '/assets/register.51891ce73f432ab1775e.css.css',
+        vendor: '/assets/vendor.05da070997b9dc9641ad.css.css'
+    }
+}
+
+>>>>>>>>>>>>>>>> SERVER > APP LOADER > (convert rendered modules to bundles) > BUNDLES:
+
+[{
+    id: 820,
+    name: './client/containers/Login/Login.js',
+    file: 'login.c7d0560f26caceb37ccb.css.css',
+    publicPath: '/assets/login.c7d0560f26caceb37ccb.css.css'
+}, {
+    id: 820,
+    name: './client/containers/Login/Login.js',
+    file: 'login.be00918d3ff766e60b5a.chunk.js',
+    publicPath: '/assets/login.be00918d3ff766e60b5a.chunk.js'
+}]
