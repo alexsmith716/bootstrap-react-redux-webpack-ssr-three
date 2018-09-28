@@ -9,7 +9,16 @@ import { replace } from 'connected-react-router';
 import { App, Home, NotFound } from '../client/containers';
 
 // dynamically imported routes
-import About from '../client/containers/About/Loadable';
+import About from '../client/containers/About/About';
+
+// import AboutOne from '../client/containers/AboutOne/AboutOne';
+// import AboutToo from '../client/containers/AboutToo/AboutToo';
+// import AboutThree from '../client/containers/AboutThree/AboutThree';
+// import StickyFooter from '../client/containers/StickyFooter/StickyFooter';
+// import Login from '../client/containers/Login/Login';
+// import Register from '../client/containers/Register/Register';
+// import LoginSuccess from '../client/containers/LoginSuccess/LoginSuccess';
+
 import AboutOne from '../client/containers/AboutOne/Loadable';
 import AboutToo from '../client/containers/AboutToo/Loadable';
 import AboutThree from '../client/containers/AboutThree/Loadable';

@@ -5,7 +5,6 @@ const config = require('../config/config');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
@@ -48,14 +47,19 @@ configuration.stats = {
   // children: false,
 }
 
-// Code Splitting: Entry Points: Manually split code using entry configuration. 
+// https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
+// Passing an array of file paths to entry property creates a 'multi-main entry'
+// inject multiple 'dependent' files together and graph 'their dependencies' into one 'chunk'
 configuration.entry.main.push(
   'bootstrap-loader',
   './client/index.js',
 );
 
-configuration.output.filename = '[name].[chunkhash].bundle.js';
+// specifies the name of each output entry file
+configuration.output.filename = '[name].[chunkhash].js';
+// specifies the name of each (non-entry) chunk files
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+// network path for static files
 configuration.output.publicPath = config.publicPath;
 
 configuration.module.rules.push(
@@ -146,7 +150,9 @@ configuration.module.rules.push(
 
 configuration.optimization = {
   minimizer: [
+    // minify javascript 
     new TerserPlugin(),
+    // minify css (default: cssnano)
     new OptimizeCSSAssetsPlugin()
   ],
   // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
@@ -158,42 +164,42 @@ configuration.optimization = {
     maxInitialRequests: 3,
     automaticNameDelimiter: '.',
     name: true,
-    // DEFAULT SETTINGS +++++++++++++++++:
-    // vendors added to main.js
-    // cacheGroups: {
-    //   vendors: {
-    //     test: /[\\/]node_modules[\\/]/,
-    //     priority: -10
-    //   },
-    //   default: {
-    //     minChunks: 2,
-    //     priority: -20,
-    //     reuseExistingChunk: true
-    //   }
-    // }
-    // VENDOR SPECIFIC CHUNK +++++++++++++++++:
     cacheGroups: {
-      // styles: {
-      //   name: 'main',
-      //   test: (m,c,entry = 'main') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-      //   // test: /\.(scss)$/,
-      //   chunks: 'async',
-      //   // chunks: 'all',
-      //   enforce: true,
-      // },
       vendor: {
         name: 'vendor',
-        reuseExistingChunk: true,
+        // reuseExistingChunk: true,
         chunks: chunk => ['main',].includes(chunk.name),
         test: module => /[\\/]node_modules[\\/]/.test(module.context),
-        // VENDOR.JS 10 CHUNKS / 823 KiB +++++++++++++++++:
         minChunks: 1,
-        minSize: 0
-        // VENDOR.JS 0 CHUNKS / 835 KiB +++++++++++++++++:
-        // chunks: 'all'
-      }
+        minSize: 0,
+      },
     },
   },
+  // splitChunks: {
+  //   // chunks: 'async',
+  //   // chunks: 'initial',
+  //   minSize: 30000,
+  //   maxSize: 0,
+  //   minChunks: 1,
+  //   maxAsyncRequests: 5,
+  //   maxInitialRequests: 3,
+  //   automaticNameDelimiter: '~',
+  //   name: true,
+  //   cacheGroups: {
+  //     vendor: {
+  //       name: 'vendor',
+  //       // reuseExistingChunk: true,
+  //       chunks: 'initial',
+  //       test: /node_modules/,
+  //       // chunks: chunk => ['main',].includes(chunk.name),
+  //       // test: module => /[\\/]node_modules[\\/]/.test(module.context),
+  //       // minChunks: 1,
+  //       // minSize: 0,
+  //       priority: 10,
+  //       enforce: true
+  //     }
+  //   },
+  // },
   runtimeChunk: {
     name: 'manifest'
   },
@@ -252,19 +258,15 @@ configuration.plugins.push(
   //   navigateFallback: '/assets/index.html',
   // }),
 
-  // new Visualizer({
-  //   filename: '../../analyzers/visualizer/bundle-stats.html'
-  // }),
-
-  // new BundleAnalyzerPlugin({
-  //   analyzerMode: 'static',
-  //   reportFilename: '../../analyzers/bundleAnalyzer/client-development.html',
-  //   // analyzerMode: 'server',
-  //   // analyzerPort: 8888,
-  //   // defaultSizes: 'parsed',
-  //   openAnalyzer: false,
-  //   generateStatsFile: false
-  // }),
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    reportFilename: '../../analyzers/bundleAnalyzer/client-development.html',
+    // analyzerMode: 'server',
+    // analyzerPort: 8888,
+    // defaultSizes: 'parsed',
+    openAnalyzer: false,
+    generateStatsFile: false
+  }),
 );
 
 // console.log('>>>>>>>>>>>>>>>>>>> WCCPB CLIENT configuration: ', configuration)

@@ -14,6 +14,7 @@ module.exports = {
   },
 
   output: {
+    // filesystem path for static files
     path: path.resolve(rootPath, 'build/public/assets'),
   },
 

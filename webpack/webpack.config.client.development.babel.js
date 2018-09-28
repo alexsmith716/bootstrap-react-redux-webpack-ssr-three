@@ -45,8 +45,11 @@ configuration.mode = 'development';
 // configuration.devtool = 'source-map';
 configuration.devtool = 'inline-source-map';
 
+// specifies the name of each output entry file
 configuration.output.filename = '[name].[hash].js';
+// specifies the name of each (non-entry) chunk files
 configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+// network path for static files
 configuration.output.publicPath = config.publicPath;
 
 // https://babeljs.io/docs/en/next/babel-polyfill.html
