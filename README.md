@@ -159,39 +159,103 @@ https://babeljs.io/docs/en/v7-migration-api
 * https://mongoosejs.com/docs/connections.html
 * https://mongoosejs.com/docs/promises.html
 
+* https://github.com/tc39/proposal-dynamic-import
 * https://docs.mongodb.com/manual/reference/connection-string/
+
+
+### Production:
+
+  * Code Splitting:
+
+    * Using the Three Main approaches to code splitting:
+    
+      * Entry Points: Manually split code using entry configuration.
+      * Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+      * Dynamic Imports: Split code via inline function calls within modules.
+
+  * Bundle Splitting:
+    *  optimization.splitChunks.cacheGroups
+
+  * Caching:
+
+
+### Development:
+
+  * Code Splitting:
+
+    * Entry Points: Manually split code using entry configuration.
+      * (webpack-config > configuration.entry.main.push('bootstrap-loader','./client/index.js');)
+      * https://webpack.js.org/guides/code-splitting/#entry-points
+
+  * Bundle Splitting:
+    * [DLLS](https://webpack.js.org/plugins/dll-plugin/)
+
+  * Caching:
+
+
+
+### Webpack - Dynamic Code Splitting (Dynamic Imports:
+
+  * https://survivejs.com/webpack/what-is-webpack/#webpack-s-execution-process
+  * https://webpack.js.org/guides/code-splitting/#dynamic-imports
+  * https://github.com/tc39/proposal-dynamic-import
+  * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
 
 
 ### Code Splitting:
 
-* https://webpack.js.org/guides/code-splitting/
+  * https://webpack.js.org/guides/code-splitting/
+  * https://webpack.js.org/guides/caching/
+  * https://webpack.js.org/guides/output-management/
+  * https://webpack.js.org/plugins/split-chunks-plugin/
+  * https://webpack.js.org/configuration/output/#output-filename
+  
+  * split app code into various bundles which can then be loaded on demand or in parallel
+  * used to achieve smaller bundles and control resource load prioritization (improve route load time)
+  
+  * Three Main approaches to code splitting:
+  
+  * Entry Points: Manually split code using entry configuration.
+    * (webpack-config > configuration.entry.main.push('bootstrap-loader','./client/index.js');)
+    * https://webpack.js.org/guides/code-splitting/#entry-points
+  
+  * Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+    * (used in conjunction with 1st approach - Entry Points)
+    * ((webpack-config > optimization.splitChunks)
+    * https://webpack.js.org/guides/code-splitting/#prevent-duplication
+  
+  * Dynamic Imports: Split code via inline function calls within modules. 
+    * dynamic code splitting.
+    * use the import() syntax that conforms to the ECMAScript proposal for dynamic imports.
+    * Dynamically load modules. Calls to import() are treated as split points
+    * Calls to import() are treated as split points - meaning the requested module and it's children are split out into a separate chunk
+    * import() returns a promise (used with async functions)
+    * import() returns a promise (requires using Babel and 'babel-plugin-syntax-dynamic-import' plugin)
+    * 'react-loadable': 'A higher order component for loading components with promises'
+    * https://webpack.js.org/guides/code-splitting/#dynamic-imports
+    * https://webpack.js.org/api/module-methods/#import-
+    * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
+    * https://webpack.js.org/configuration/output/#output-chunkfilename
+  
 
-* used to achieve smaller bundles and control resource load prioritization
-* has a major impact on load time
+## Bundle Splitting:
 
-* Three Main approaches to code splitting:
+  * separating dependencies (files) to eliminate redundant downloads
+  * push vendor dependencies to a bundle of their own and benefit from client level caching
 
-* Entry Points: Manually split code using entry configuration.
-  * (webpack-config > configuration.entry.main.push('bootstrap-loader','./client/index.js');)
-  * https://webpack.js.org/guides/code-splitting/#entry-points
 
-* Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
-  * (used in conjunction with 1st approach - Entry Points)
-  * ((webpack-config > optimization.splitChunks)
-  * https://webpack.js.org/guides/code-splitting/#prevent-duplication
-
-* Dynamic Imports: Split code via inline function calls within modules. 
-  * dynamic code splitting.
-  * use the import() syntax that conforms to the ECMAScript proposal for dynamic imports.
-  * Dynamically load modules. Calls to import() are treated as split points
-  * Calls to import() are treated as split points - meaning the requested module and it's children are split out into a separate chunk
-  * import() returns a promise (used with async functions)
-  * import() returns a promise (requires using Babel and 'babel-plugin-syntax-dynamic-import' plugin)
-  * 'react-loadable': 'A higher order component for loading components with promises'
-  * https://webpack.js.org/guides/code-splitting/#dynamic-imports
-  * https://webpack.js.org/api/module-methods/#import-
-  * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
-
+>>>>>>>>>>>>>>>> '/' SERVER > APP LOADER > (webpack-compiled chunks) > ASSETS:
+{
+    javascript: {
+        main: '/assets/main.a5f50529c94d063f2a72.chunk.js',
+        vendor: '/assets/vendor.9b4e59093ed8bf15d743.chunk.js',
+        manifest: '/assets/manifest.a5fd97cb3d6ad5582ceb.bundle.js'
+    },
+    styles: {
+        main: '/assets/main.dfcff2a8df459c8cc23b.css.css',
+        vendor: '/assets/vendor.876fc8dfe0b356037a9f.css.css'
+    }
+}
 
 >>>>>>>>>>>>>>>> '/' SERVER > APP LOADER > (webpack-compiled chunks) > ASSETS:
 {
