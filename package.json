@@ -18,9 +18,9 @@
     "start:prod": "concurrently \"yarn prod:server\" \"yarn prod:api\"",
     "prod:server": "NODE_ENV=production node ./bin/server.js",
     "prod:api": "NODE_ENV=production node ./bin/api.js",
-    "prod:build": "NODE_ENV=production webpack --mode production --display-error-details --config ./webpack/webpack.config.server.production.babel.js",
-    "dlls": "webpack --display-error-details --config webpack/dllplugin.vendor.config.js",
-    "build": "NODE_ENV=production webpack --mode production --display-error-details --config ./webpack/webpack.config.client.production.babel.js",
+    "prod:server:build": "NODE_ENV=production webpack --mode production --display-error-details --config ./webpack/webpack.config.server.production.babel.js",
+    "dev:dlls": "webpack --display-error-details --config webpack/dllplugin.vendor.config.js",
+    "prod:build": "NODE_ENV=production webpack --mode production --display-error-details --config ./webpack/webpack.config.client.production.babel.js",
     "prettier": "prettier-eslint --write --eslint-config-path .eslintrc './+(bin)/**/*.js'",
     "lint": "eslint -c .eslintrc bin && flow",
     "test": "NODE_PATH=client jest client"
