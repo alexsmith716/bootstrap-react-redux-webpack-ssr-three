@@ -55,11 +55,31 @@ configuration.entry.main.push(
   './client/index.js',
 );
 
-// specifies the name of each output entry file
-configuration.output.filename = '[name].[chunkhash].js';
-// specifies the name of each (non-entry) chunk files
-configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
-// network path for static files
+// ---------------------------------------------------------------------------------------
+
+// STOP THE PRESSES!!!!
+// the app appears to work just by specifying (output.filename = 'bundle.js')
+// webpack essentially does it's thing without 'output.chunkFilename' and 'optimization.splitChunks'
+// vendor bundle is combined into 'bundle.js'
+// chunks are numbered, not named, but they still are chunked!!
+// universal-weboack and react-loadable work but I will check again on that
+
+// regarding the configuration of 'output' key options:
+// affect the naming of bundles and chunks
+// affect the caching of files produced by webpack
+// https://webpack.js.org/guides/caching/
+
+// output.filename: determines the name of each output bundle
+// output.filename: The bundle is written to the directory specified by 'output.path'
+configuration.output.filename = 'bundle.js';
+// configuration.output.filename = '[name].[chunkhash].bundle.js';
+
+// output.chunkFilename: specifies the name of each (non-entry) chunk files
+// output.chunkFilename: main option here is to specify caching
+// configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+
+// output.publicPath: specifies the public URL of the output directory
+// output.publicPath: value is prefixed to every URL created by the runtime or loaders
 configuration.output.publicPath = config.publicPath;
 
 configuration.module.rules.push(
@@ -131,23 +151,6 @@ configuration.module.rules.push(
   },
 );
 
-// optimization.minimize: ( false || true )
-//    *** Tell webpack to minimize the bundle using the UglifyjsWebpackPlugin
-//    *** This is true by default in production mode
-//    *** if 'false', then minimize manually in a separate step
-
-// While webpack 5 is likely to come with a CSS minimizer built-in,
-// with webpack 4 you need to bring your own.
-// To minify the output, use a plugin like optimize-css-assets-webpack-plugin.
-// Setting optimization.minimizer overrides the defaults provided by webpack,
-// so make sure to also specify a JS minimizer:
-
-// https://webpack.js.org/plugins/split-chunks-plugin/
-
-// moved from, 'uglifyjs-webpack-plugin' to 'terser-webpack-plugin'
-// https://github.com/webpack-contrib/terser-webpack-plugin
-// https://github.com/webpack-contrib/uglifyjs-webpack-plugin/blob/master/CHANGELOG.md#200-2018-09-14
-
 configuration.optimization = {
   minimizer: [
     // minify javascript 
@@ -156,30 +159,9 @@ configuration.optimization = {
     new OptimizeCSSAssetsPlugin()
   ],
   // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
-  splitChunks: {
-    chunks: 'async',
-    minSize: 30000,
-    minChunks: 1,
-    maxAsyncRequests: 5,
-    maxInitialRequests: 3,
-    automaticNameDelimiter: '.',
-    name: true,
-    cacheGroups: {
-      vendor: {
-        name: 'vendor',
-        // reuseExistingChunk: true,
-        chunks: chunk => ['main',].includes(chunk.name),
-        test: module => /[\\/]node_modules[\\/]/.test(module.context),
-        minChunks: 1,
-        minSize: 0,
-      },
-    },
-  },
   // splitChunks: {
-  //   // chunks: 'async',
-  //   // chunks: 'initial',
+  //   chunks: 'async',
   //   minSize: 30000,
-  //   maxSize: 0,
   //   minChunks: 1,
   //   maxAsyncRequests: 5,
   //   maxInitialRequests: 3,
@@ -189,20 +171,41 @@ configuration.optimization = {
   //     vendor: {
   //       name: 'vendor',
   //       // reuseExistingChunk: true,
-  //       chunks: 'initial',
-  //       test: /node_modules/,
-  //       // chunks: chunk => ['main',].includes(chunk.name),
-  //       // test: module => /[\\/]node_modules[\\/]/.test(module.context),
-  //       // minChunks: 1,
-  //       // minSize: 0,
-  //       priority: 10,
-  //       enforce: true
-  //     }
+  //       chunks: chunk => ['main',].includes(chunk.name),
+  //       test: module => /[\\/]node_modules[\\/]/.test(module.context),
+  //       minChunks: 1,
+  //       minSize: 0,
+  //     },
   //   },
   // },
-  runtimeChunk: {
-    name: 'manifest'
-  },
+  // // splitChunks: {
+  // //   // chunks: 'async',
+  // //   // chunks: 'initial',
+  // //   minSize: 30000,
+  // //   maxSize: 0,
+  // //   minChunks: 1,
+  // //   maxAsyncRequests: 5,
+  // //   maxInitialRequests: 3,
+  // //   automaticNameDelimiter: '~',
+  // //   name: true,
+  // //   cacheGroups: {
+  // //     vendor: {
+  // //       name: 'vendor',
+  // //       // reuseExistingChunk: true,
+  // //       chunks: 'initial',
+  // //       test: /node_modules/,
+  // //       // chunks: chunk => ['main',].includes(chunk.name),
+  // //       // test: module => /[\\/]node_modules[\\/]/.test(module.context),
+  // //       // minChunks: 1,
+  // //       // minSize: 0,
+  // //       priority: 10,
+  // //       enforce: true
+  // //     }
+  // //   },
+  // // },
+  // runtimeChunk: {
+  //   name: 'manifest'
+  // },
   // runtimeChunk: true,
   // occurrenceOrder: true
 };
