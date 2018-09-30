@@ -70,7 +70,6 @@ module.exports = {
   },
 
   // Hides "Entrypoint size exeeds the recommened limit (250kB)" warnings.
-  // https://github.com/webpack/webpack/issues/3486
   // performance:{
   //   hints: false
   // },

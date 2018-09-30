@@ -49,7 +49,7 @@ configuration.stats = {
 
 // https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
 // Passing an array of file paths to entry property creates a 'multi-main entry'
-// inject multiple 'dependent' files together and graph 'their dependencies' into one 'chunk'
+// inject multiple 'dependent' files together and graph 'their dependencies' into one 'chunk' (main)
 configuration.entry.main.push(
   'bootstrap-loader',
   './client/index.js',
@@ -59,24 +59,47 @@ configuration.entry.main.push(
 
 // STOP THE PRESSES!!!!
 // the app appears to work just by specifying (output.filename = 'bundle.js')
-// webpack essentially does it's thing without 'output.chunkFilename' and 'optimization.splitChunks'
+// webpack essentially does it's thing without config 'output.chunkFilename' and 'optimization.splitChunks'
 // vendor bundle is combined into 'bundle.js'
 // chunks are numbered, not named, but they still are chunked!!
 // universal-weboack and react-loadable work but I will check again on that
+
+// the webpack config seems to boil down to
+// pull vendor files (they rarely change) out of 'main.bundle'
 
 // regarding the configuration of 'output' key options:
 // affect the naming of bundles and chunks
 // affect the caching of files produced by webpack
 // https://webpack.js.org/guides/caching/
 
+// https://medium.com/webpack/predictable-long-term-caching-with-webpack-d3eee1d3fa31
+
+// main bundle may change
+// chunks may change
+// vendor bundle rarely will change
+
+// caching with chunks named and hashed with chunkhash 
+// observe the hash made to changes of bundles and chunks
+// observe the hash of vendor when changes are made to bundles and chunks
+
+// webpack:
+//  runtime:
+//  manifest:
+
+// basic goal is determining caching strategy for an app 
+// (understanding how webpack handles file changes and how that affects caching)
+// (an unchanged vendor bundle regarding changes to chunks and multiple entry points)
+
+// cache invalidation
+
 // output.filename: determines the name of each output bundle
 // output.filename: The bundle is written to the directory specified by 'output.path'
-configuration.output.filename = 'bundle.js';
-// configuration.output.filename = '[name].[chunkhash].bundle.js';
+// configuration.output.filename = 'bundle.js';
+configuration.output.filename = '[name].[chunkhash].bundle.js';
 
 // output.chunkFilename: specifies the name of each (non-entry) chunk files
 // output.chunkFilename: main option here is to specify caching
-// configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
+configuration.output.chunkFilename = '[name].[chunkhash].chunk.js';
 
 // output.publicPath: specifies the public URL of the output directory
 // output.publicPath: value is prefixed to every URL created by the runtime or loaders
@@ -159,53 +182,65 @@ configuration.optimization = {
     new OptimizeCSSAssetsPlugin()
   ],
   // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+  splitChunks: {
+    chunks: 'async',
+    // inSize: 30000,
+    // axSize: 0,
+    // inChunks: 1,
+    // axAsyncRequests: 5,
+    // axInitialRequests: 3,
+    automaticNameDelimiter: '~',
+    name: true,
+    cacheGroups: {
+      vendor: {
+        test: /node_modules/,
+        chunks: 'initial',
+        name: 'vendor',
+        // priority: 10,
+        chunks: 'all',
+        enforce: true
+      },
+      styles: {
+        name: 'styles',
+        test: /\.(scss)$/,
+        chunks: 'all',
+        enforce: true
+      }
+    },
+  },
   // splitChunks: {
   //   chunks: 'async',
   //   minSize: 30000,
   //   minChunks: 1,
   //   maxAsyncRequests: 5,
   //   maxInitialRequests: 3,
-  //   automaticNameDelimiter: '~',
+  //   automaticNameDelimiter: '.',
   //   name: true,
   //   cacheGroups: {
+  //     // styles: {
+  //     //   name: 'main',
+  //     //   test: (m,c,entry = 'main') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+  //     //   // test: /\.(scss)$/,
+  //     //   chunks: 'async',
+  //     //   // chunks: 'all',
+  //     //   enforce: true,
+  //     // },
   //     vendor: {
   //       name: 'vendor',
-  //       // reuseExistingChunk: true,
+  //       reuseExistingChunk: true,
   //       chunks: chunk => ['main',].includes(chunk.name),
   //       test: module => /[\\/]node_modules[\\/]/.test(module.context),
   //       minChunks: 1,
   //       minSize: 0,
   //     },
+  //     // commons: {
+  //     //   name: 'commons',
+  //     // }
   //   },
   // },
-  // // splitChunks: {
-  // //   // chunks: 'async',
-  // //   // chunks: 'initial',
-  // //   minSize: 30000,
-  // //   maxSize: 0,
-  // //   minChunks: 1,
-  // //   maxAsyncRequests: 5,
-  // //   maxInitialRequests: 3,
-  // //   automaticNameDelimiter: '~',
-  // //   name: true,
-  // //   cacheGroups: {
-  // //     vendor: {
-  // //       name: 'vendor',
-  // //       // reuseExistingChunk: true,
-  // //       chunks: 'initial',
-  // //       test: /node_modules/,
-  // //       // chunks: chunk => ['main',].includes(chunk.name),
-  // //       // test: module => /[\\/]node_modules[\\/]/.test(module.context),
-  // //       // minChunks: 1,
-  // //       // minSize: 0,
-  // //       priority: 10,
-  // //       enforce: true
-  // //     }
-  // //   },
-  // // },
-  // runtimeChunk: {
-  //   name: 'manifest'
-  // },
+  runtimeChunk: {
+    name: 'manifest'
+  },
   // runtimeChunk: true,
   // occurrenceOrder: true
 };
