@@ -169,7 +169,7 @@ class App extends Component {
 
           <div className="container">
 
-            <Link to='/' className={`navbar-brand js-scroll-trigger ${stylesScss1.brand}`}>Election App</Link>
+            <Link to='/' className={`navbar-brand js-scroll-trigger ${stylesScss1.brand}`}>Election App (TESTING 'optimization.runtimeChunk' ???)</Link>
 
             <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>

@@ -37,7 +37,8 @@ function recursiveIssuer(m) {
   }
 }
 
-// configuration.devtool = 'source-map';
+configuration.mode = 'production',
+configuration.devtool = 'source-map';
 // configuration.devtool = 'hidden-source-map'; // stack trace info only
 
 configuration.stats = {
@@ -57,45 +58,32 @@ configuration.entry.main.push(
 
 // ---------------------------------------------------------------------------------------
 
-// STOP THE PRESSES!!!!
-// the app appears to work just by specifying (output.filename = 'bundle.js')
-// webpack essentially does it's thing without config 'output.chunkFilename' and 'optimization.splitChunks'
-// vendor bundle is combined into 'bundle.js'
-// chunks are numbered, not named, but they still are chunked!!
-// universal-weboack and react-loadable work but I will check again on that
+// DllPlugin:
+// Use the DllPlugin to move code that is changed less often into a separate compilation. 
+// improves the application's compilation speed
 
-// the webpack config seems to boil down to
-// pull vendor files (they rarely change) out of 'main.bundle'
 
-// regarding the configuration of 'output' key options:
-// affect the naming of bundles and chunks
-// affect the caching of files produced by webpack
-// https://webpack.js.org/guides/caching/
+// Configure Webpack for Caching:
+//  * https://webpack.js.org/guides/caching/
 
-// https://medium.com/webpack/predictable-long-term-caching-with-webpack-d3eee1d3fa31
 
-// main bundle may change
-// chunks may change
-// vendor bundle rarely will change
+// Configure Webpack to avoid duplicated dependencies across chunks (pull vendor modules from main bundle and into their own chunk):
+//  * https://webpack.js.org/plugins/split-chunks-plugin/
 
-// caching with chunks named and hashed with chunkhash 
-// observe the hash made to changes of bundles and chunks
-// observe the hash of vendor when changes are made to bundles and chunks
 
-// webpack:
-//  runtime:
-//  manifest:
+// Configure Webpack for Code Splitting:
+//  * https://webpack.js.org/guides/code-splitting
 
-// basic goal is determining caching strategy for an app 
-// (understanding how webpack handles file changes and how that affects caching)
-// (an unchanged vendor bundle regarding changes to chunks and multiple entry points)
 
-// cache invalidation
+// Configure Webpack to handle combining 'chunkhash' and Code Splitting:
+//  * https://webpack.js.org/configuration/optimization/#optimization-runtimechunk
+
+// ---------------------------------------------------------------------------------------
 
 // output.filename: determines the name of each output bundle
 // output.filename: The bundle is written to the directory specified by 'output.path'
 // configuration.output.filename = 'bundle.js';
-configuration.output.filename = '[name].[chunkhash].bundle.js';
+configuration.output.filename = '[name].[chunkhash].js';
 
 // output.chunkFilename: specifies the name of each (non-entry) chunk files
 // output.chunkFilename: main option here is to specify caching
@@ -116,13 +104,13 @@ configuration.module.rules.push(
           modules: true,
           localIdentName: '[name]__[local]__[hash:base64:5]',
           importLoaders: 3,
-          // sourceMap: true,
+          sourceMap: true,
         }
       },
       {
         loader: 'postcss-loader',
         options: {
-          // sourceMap: true,
+          sourceMap: true,
           config: {
             path: 'postcss.config.js'
           }
@@ -132,8 +120,8 @@ configuration.module.rules.push(
         loader: 'sass-loader',
         options: {
           outputStyle: 'expanded',
-          // sourceMap: true,
-          // sourceMapContents: true
+          sourceMap: true,
+          sourceMapContents: true
         }
       },
       {
@@ -158,13 +146,13 @@ configuration.module.rules.push(
           modules: true,
           localIdentName: '[name]__[local]__[hash:base64:5]',
           importLoaders: 1,
-          // sourceMap: true,
+          sourceMap: true,
         }
       },
       {
         loader: 'postcss-loader',
         options: {
-          // sourceMap: true,
+          sourceMap: true,
           config: {
             path: 'postcss.config.js'
           }
@@ -184,65 +172,32 @@ configuration.optimization = {
   // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
   splitChunks: {
     chunks: 'async',
-    // inSize: 30000,
-    // axSize: 0,
-    // inChunks: 1,
-    // axAsyncRequests: 5,
-    // axInitialRequests: 3,
+    minSize: 30000,
+    maxSize: 0,
+    minChunks: 1,
+    maxAsyncRequests: 5,
+    maxInitialRequests: 3,
     automaticNameDelimiter: '~',
     name: true,
+    // 'splitChunks.cacheGroups' inherits and/or overrides any options from splitChunks
+    // 'test', 'priority' and 'reuseExistingChunk' can only be configured on 'splitChunks.cacheGroups'
     cacheGroups: {
       vendor: {
-        test: /node_modules/,
-        chunks: 'initial',
+        test: /[\\/]node_modules[\\/]/,
         name: 'vendor',
+        // chunks: 'all',
+        chunks: 'initial',
+        // chunks: 'async',
         // priority: 10,
-        chunks: 'all',
-        enforce: true
-      },
-      styles: {
-        name: 'styles',
-        test: /\.(scss)$/,
-        chunks: 'all',
-        enforce: true
       }
-    },
+    }
   },
-  // splitChunks: {
-  //   chunks: 'async',
-  //   minSize: 30000,
-  //   minChunks: 1,
-  //   maxAsyncRequests: 5,
-  //   maxInitialRequests: 3,
-  //   automaticNameDelimiter: '.',
-  //   name: true,
-  //   cacheGroups: {
-  //     // styles: {
-  //     //   name: 'main',
-  //     //   test: (m,c,entry = 'main') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-  //     //   // test: /\.(scss)$/,
-  //     //   chunks: 'async',
-  //     //   // chunks: 'all',
-  //     //   enforce: true,
-  //     // },
-  //     vendor: {
-  //       name: 'vendor',
-  //       reuseExistingChunk: true,
-  //       chunks: chunk => ['main',].includes(chunk.name),
-  //       test: module => /[\\/]node_modules[\\/]/.test(module.context),
-  //       minChunks: 1,
-  //       minSize: 0,
-  //     },
-  //     // commons: {
-  //     //   name: 'commons',
-  //     // }
-  //   },
-  // },
+  // adds an additional chunk to each entrypoint containing only the runtime
+  // runtimeChunk: true
+  // creates a runtime file to be shared for all generated chunks
   runtimeChunk: {
-    name: 'manifest'
-  },
-  // runtimeChunk: true,
-  // occurrenceOrder: true
+    name: 'runtime'
+  }
 };
 
 // ==============================================================================================
@@ -307,7 +262,7 @@ configuration.plugins.push(
   }),
 );
 
-// console.log('>>>>>>>>>>>>>>>>>>> WCCPB CLIENT configuration: ', configuration)
+console.log('>>>>>>>>>>>>>>>>>>> WCCPB CLIENT configuration: ', configuration)
 const configurationClient = clientConfiguration(configuration, settings)
 // console.log('>>>>>>>>>>>>>>>>>>> WCCPB CLIENT configurationClient: ', configurationClient)
 
