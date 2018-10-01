@@ -1,6 +1,5 @@
 # bootstrap-react-redux-webpack-ssr-three
 
-
 ## Overview:
 
 App is a continuation of repo 'bootstrap-react-redux-webpack-ssr-two'. Babel 7.x has been re-worked for app.
@@ -140,6 +139,9 @@ https://babeljs.io/docs/en/v7-migration-api
 
 
 ### Of Note:
+
+* `__esModule`: By default, when using exports with babel a non-enumerable `__esModule` property is exported
+* `__esModule` is truthful to determine whether an imported module is a ES6 module
 
 * decorators make it possible to annotate and modify classes and properties at ru time
 * a higher-order component (HOC aka 'enhancers') refers to a function that accepts a single React component and returns a new React component

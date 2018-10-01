@@ -70,9 +70,9 @@ module.exports = {
   },
 
   // Hides "Entrypoint size exeeds the recommened limit (250kB)" warnings.
-  // performance:{
-  //   hints: false
-  // },
+  performance:{
+    hints: false
+  },
 
   plugins: [
 
