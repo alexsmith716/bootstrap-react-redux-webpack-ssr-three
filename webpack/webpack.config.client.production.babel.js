@@ -50,7 +50,7 @@ configuration.stats = {
 
 // https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
 // Passing an array of file paths to entry property creates a 'multi-main entry'
-// inject multiple 'dependent' files together and graph 'their dependencies' into one 'chunk' (main)
+// injects multiple 'dependent' files together and graph 'their dependencies' into one 'chunk' (main)
 configuration.entry.main.push(
   'bootstrap-loader',
   './client/index.js',
@@ -58,9 +58,31 @@ configuration.entry.main.push(
 
 // ---------------------------------------------------------------------------------------
 
-// DllPlugin:
-// Use the DllPlugin to move code that is changed less often into a separate compilation. 
-// improves the application's compilation speed
+
+// Code Splitting approaches used in this app:
+
+
+// Production && Development -----------------------------------------------
+//  * Entry Point: Manually split code using entry configuration ('main' bundle)
+
+
+// Production Only ---------------------------------------------------------
+
+
+// Development Only --------------------------------------------------------
+
+
+// Code Splitting:
+//  * allows you to split your code into various bundles which can then be loaded on demand or in parallel
+//  * enables smaller bundles and control resource load prioritization which improves on load time
+//  * enables control of resource load prioritization which improves on load time
+
+
+// Approaches to code splitting used in this app:
+//  * Entry Points: Manually split code using entry configuration.
+//  * Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+//  * mini-css-extract-plugin: splitting CSS out from the main application
+//  * Dynamic Imports: Split code via inline function calls within modules. (react-loadable)
 
 
 // Configure Webpack for Caching:
@@ -78,12 +100,44 @@ configuration.entry.main.push(
 // Configure Webpack to handle combining 'chunkhash' and Code Splitting:
 //  * https://webpack.js.org/configuration/optimization/#optimization-runtimechunk
 
+
+// mini-css-extract-plugin:
+//  * plugin extracts CSS into separate files. 
+//  * It creates a CSS file per JS file which contains CSS. 
+//  * It supports On-Demand-Loading of CSS and SourceMaps.
+
+
+// DllPlugin:
+//  * Use the DllPlugin to move code that is changed less often into a separate compilation. 
+//  * improves the application's compilation speed
+
+
+// ---------------------------------------------------------------------------------------
+
+// Two Key Points in this config:
+//  * caching
+//  * code splitting
+
+// 1) Caching:
+//  * A simple way to ensure the browser picks up changed files is by using 'output.filename' 'substitutions'
+//  * 'substitutions' being hash's generated on each webpack build
+//  * three hash types available ('hash', 'chunkhash', 'contenthash')
+//  * using 'chunkhash' for both 'output.filename' && 'output.chunkFilename'
+//  * chunkhash: Returns an entry chunk-specific hash
+//  * chunkhash: Each 'entry' defined in the configuration receives a hash of its own (each chunk receives a unique hash)
+//  * chunkhash: If any portion of the entry changes, the hash will change as well (only for that specific chunk) 
+//  * using 'chunkhash' as opposed to 'hash' because 'hash' returns hash for entire build (the same hash applied to all chunks)
+//  * using 'chunkhash' as opposed to 'hash' because with 'hash' if any portion of the build changes, this changes as well (all chunk's hashs' change)
+
+// 2) Code Splitting:
+// *
+
 // ---------------------------------------------------------------------------------------
 
 // output.filename: determines the name of each output bundle
 // output.filename: The bundle is written to the directory specified by 'output.path'
 // configuration.output.filename = 'bundle.js';
-configuration.output.filename = '[name].[chunkhash].js';
+configuration.output.filename = '[name].[chunkhash].bundle.js';
 
 // output.chunkFilename: specifies the name of each (non-entry) chunk files
 // output.chunkFilename: main option here is to specify caching
@@ -162,43 +216,43 @@ configuration.module.rules.push(
   },
 );
 
-configuration.optimization = {
-  minimizer: [
-    // minify javascript 
-    new TerserPlugin(),
-    // minify css (default: cssnano)
-    new OptimizeCSSAssetsPlugin()
-  ],
-  // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
-  splitChunks: {
-    chunks: 'async',
-    minSize: 30000,
-    maxSize: 0,
-    minChunks: 1,
-    maxAsyncRequests: 5,
-    maxInitialRequests: 3,
-    automaticNameDelimiter: '~',
-    name: true,
-    // 'splitChunks.cacheGroups' inherits and/or overrides any options from splitChunks
-    // 'test', 'priority' and 'reuseExistingChunk' can only be configured on 'splitChunks.cacheGroups'
-    cacheGroups: {
-      vendor: {
-        test: /[\\/]node_modules[\\/]/,
-        name: 'vendor',
-        // chunks: 'all',
-        chunks: 'initial',
-        // chunks: 'async',
-        // priority: 10,
-      }
-    }
-  },
-  // adds an additional chunk to each entrypoint containing only the runtime
-  // runtimeChunk: true
-  // creates a runtime file to be shared for all generated chunks
-  runtimeChunk: {
-    name: 'runtime'
-  }
-};
+// configuration.optimization = {
+//   minimizer: [
+//     // minify javascript 
+//     new TerserPlugin(),
+//     // minify css (default: cssnano)
+//     new OptimizeCSSAssetsPlugin()
+//   ],
+//   // Code Splitting: Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
+//   splitChunks: {
+//     chunks: 'async',
+//     minSize: 30000,
+//     maxSize: 0,
+//     minChunks: 1,
+//     maxAsyncRequests: 5,
+//     maxInitialRequests: 3,
+//     automaticNameDelimiter: '~',
+//     name: true,
+//     // 'splitChunks.cacheGroups' inherits and/or overrides any options from splitChunks
+//     // 'test', 'priority' and 'reuseExistingChunk' can only be configured on 'splitChunks.cacheGroups'
+//     cacheGroups: {
+//       vendor: {
+//         test: /[\\/]node_modules[\\/]/,
+//         name: 'vendor',
+//         // chunks: 'all',
+//         chunks: 'initial',
+//         // chunks: 'async',
+//         // priority: 10,
+//       }
+//     }
+//   },
+//   // adds an additional chunk to each entrypoint containing only the runtime
+//   // runtimeChunk: true
+//   // creates a runtime file to be shared for all generated chunks
+//   runtimeChunk: {
+//     name: 'runtime'
+//   }
+// };
 
 // ==============================================================================================
 
