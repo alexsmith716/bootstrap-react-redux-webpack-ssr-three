@@ -165,12 +165,54 @@ https://babeljs.io/docs/en/v7-migration-api
 * https://docs.mongodb.com/manual/reference/connection-string/
 
 
+### Dependency Graph:
+  * Any time one file depends on another, webpack treats this as a dependency
+  * Starting from an entry point(s), webpack recursively builds a dependency graph that includes every module/asset your application needs
+
+
+### Entry Point:
+  * The entry point tells webpack where to start and follows the graph of dependencies to know what to bundle
+  * You can think of your application's entry point(s) as the contextual root(s) of what you want bundled
+
+
+### Vendor Entry Point:
+  * Create dependency graphs starting at both 'main.js' and 'vendor.js'
+  * These graphs are completely separate and independent of each other
+  * These graphs allow leverage of 'SplitChunksPlugin' and extract any vendor references from your app bundle into your vendor bundle
+  * Helps achieve a common pattern in webpack known as long-term vendor-caching
+  * https://webpack.js.org/plugins/commons-chunk-plugin/
+  * https://webpack.js.org/plugins/split-chunks-plugin/
+
+
+### Code Splitting:
+  * Refers to dividing your code into various bundles/chunks
+  * Refers to loading those bundles/chunks on demand (when requested/needed) instead of loading a single bundle containing everything
+  * https://webpack.js.org/glossary/
+
+
+### Bundle: 
+  * Produced from a number of distinct modules
+  * bundles contain the final versions of source files that have already undergone the loading and compilation process
+
+
+### Bundle Splitting:
+  * This process offers one way of optimizing a build, allowing webpack to generate multiple bundles for a single application
+  * As a result, each bundle can be isolated from changes effecting others, reducing the amount of code that needs to be republished
+  * and therefore re-downloaded by the client and taking advantage of browser caching
+
+
+### Chunk:
+  * This webpack-specific term is used internally to manage the bundling process
+  * Bundles are composed out of chunks, of which there are several types (e.g. entry and child)
+  * Typically, chunks directly correspond with the output bundles however, there are some configurations that don't yield a one-to-one relationship
+
+
 ### Production:
 
   * Code Splitting:
 
     * Using the Three Main approaches to code splitting:
-    
+
       * Entry Points: Manually split code using entry configuration.
       * Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
       * Dynamic Imports: Split code via inline function calls within modules.
@@ -211,21 +253,21 @@ https://babeljs.io/docs/en/v7-migration-api
   * https://webpack.js.org/guides/output-management/
   * https://webpack.js.org/plugins/split-chunks-plugin/
   * https://webpack.js.org/configuration/output/#output-filename
-  
+
   * split app code into various bundles which can then be loaded on demand or in parallel
   * used to achieve smaller bundles and control resource load prioritization (improve route load time)
-  
+
   * Three Main approaches to code splitting:
-  
+
   * Entry Points: Manually split code using entry configuration.
     * (webpack-config > configuration.entry.main.push('bootstrap-loader','./client/index.js');)
     * https://webpack.js.org/guides/code-splitting/#entry-points
-  
+
   * Prevent Duplication: Use the SplitChunksPlugin to dedupe and split chunks.
     * (used in conjunction with 1st approach - Entry Points)
     * ((webpack-config > optimization.splitChunks)
     * https://webpack.js.org/guides/code-splitting/#prevent-duplication
-  
+
   * Dynamic Imports: Split code via inline function calls within modules. 
     * dynamic code splitting.
     * use the import() syntax that conforms to the ECMAScript proposal for dynamic imports.
@@ -238,7 +280,7 @@ https://babeljs.io/docs/en/v7-migration-api
     * https://webpack.js.org/api/module-methods/#import-
     * https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import/
     * https://webpack.js.org/configuration/output/#output-chunkfilename
-  
+
 
 ## Bundle Splitting:
 
